@@ -678,6 +678,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   width: 20rem;
 }
 
+.w-90 {
+  width: 22rem;
+}
+
 .w-64 {
   width: 16rem;
 }
