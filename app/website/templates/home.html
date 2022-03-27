@@ -261,7 +261,7 @@
 									</div>
 									<div class="inline-flex">
 										<img src="{{ url_for('static', filename='img/date.svg')}}" alt="">
-										<p class="ml-1 text-gray-500 font-semibold">{{ event.date }}</p>
+										<p class="ml-1 text-gray-500 font-semibold">{{ event.date|format_string_date }}</p>
 									</div>
 									<div class="inline-flex">
 										<img src="{{ url_for('static', filename='img/time.svg')}}" alt="">
@@ -288,7 +288,7 @@
 									</div>
 									<div class="inline-flex">
 										<img src="{{ url_for('static', filename='img/date.svg')}}" alt="">
-										<p class="ml-1 text-gray-500 font-semibold">{{ event.date }}</p>               
+										<p class="ml-1 text-gray-500 font-semibold">{{ event.date|format_string_date }}</p>               
 									</div>
 									<div class="inline-flex">
 										<img src="{{ url_for('static', filename='img/time.svg')}}" alt="">
@@ -315,7 +315,7 @@
 									</div>
 									<div class="inline-flex">
 										<img src="{{ url_for('static', filename='img/date.svg')}}" alt="">
-										<p class="ml-1 text-gray-500 font-semibold">{{ event.date }}</p>               
+										<p class="ml-1 text-gray-500 font-semibold">{{ event.date|format_string_date }}</p>               
 									</div>
 									<div class="inline-flex">
 										<img src="{{ url_for('static', filename='img/time.svg')}}" alt="">
@@ -342,7 +342,7 @@
 									</div>
 									<div class="inline-flex">
 										<img src="{{ url_for('static', filename='img/date.svg')}}" alt="">
-										<p class="ml-1 text-gray-500 font-semibold">{{ event.date }}</p>               
+										<p class="ml-1 text-gray-500 font-semibold">{{ event.date|format_string_date }}</p>               
 									</div>
 									<div class="inline-flex">
 										<img src="{{ url_for('static', filename='img/time.svg')}}" alt="">
@@ -433,55 +433,280 @@
 		</div>
 	</div>
 	{% for x in individuals %}
-	<div class="hidden overflow-y-auto overflow-x-hidden fixed right-0 left-0 top-4 z-50 justify-center items-center md:inset-0 h-modal sm:h-full" id="edit-popup-modal-{{ x.name }}">
-		<div class="relative px-4 w-full max-w-md h-full md:h-auto">
-			<div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-				<div class="flex justify-end p-2">
-					<button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800
-												 dark:hover:text-white" data-modal-toggle="edit-popup-modal-{{ x.name }}">
-						<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-							<path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 
-														 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>  
-					</button>
+		<div class="hidden overflow-y-auto overflow-x-hidden fixed right-0 left-0 top-4 z-50 justify-center items-center md:inset-0 h-modal sm:h-full" id="edit-popup-modal-{{ x.name }}">
+			<div class="relative px-4 w-full max-w-md h-full md:h-auto">
+				<div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+					<div class="flex justify-end p-2">
+						<button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800
+													dark:hover:text-white" data-modal-toggle="edit-popup-modal-{{ x.name }}">
+							<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+								<path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 
+															01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>  
+						</button>
+					</div>
+					<div class="p-6 pt-0 text-center">
+						<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Add Event and Ranking for {{ x.name }}</h3>
+						<form method="post">
+							<div class="flex ml-6">
+								<div style="width: 9rem;">
+									<p class="font-bold relative" style="margin-bottom: 3px;">Select an Event:</p>
+									<select class="rounded-lg mb-6" name="event">
+										{% for event in events %}
+											{% if event.type in ["individual-academic", "individual-sports"] %}
+												<option>{{ event.name }}</option>
+											{% endif %}
+										{% endfor %}
+									</select>
+								</div>
+								<div style="padding-left: 2rem;">
+									<p class="font-bold relative" style="margin-bottom: 3px;">Select Player Rank:</p>
+									<select class="rounded-lg mb-6 relative" name="points">
+										<option value="5">1</option>
+										<option value="4">2</option>
+										<option value="3">3</option>
+										<option value="2">4</option>
+										<option value="1">5</option>
+										<option value="0">6+</option>
+									</select>
+								</div>
+							</div>
+							<button data-modal-toggle="edit-popup-modal-{{ x.name }}" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-gray-300 rounded-lg border border-gray-200 
+																							text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 
+																							dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600">Cancel</button>
+							<button data-modal-toggle="edit-popup-modal-{{ x.name }}" name="name" value="{{ x.name }}" type="submit" class="text-white bg-green-400 hover:bg-green-800 focus:ring-4 
+																																			focus:ring-green-300 font-medium rounded-lg text-sm inline-flex 
+																																			items-center px-5 py-2.5 text-center mr-2">Add</button>
+						</form>
+					</div>
 				</div>
-				<div class="p-6 pt-0 text-center">
-					<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Add Event and Ranking for {{ x.name }}</h3>
-					<form method="post">
+			</div>
+		</div>
+		<div class="hidden overflow-y-auto overflow-x-hidden fixed right-0 left-0 top-4 z-50 justify-center items-center md:inset-0 h-modal sm:h-full" id="delete-popup-modal-{{ x.name }}">
+			<div class="relative px-4 w-full max-w-md h-full md:h-auto">
+				<div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+					<div class="flex justify-end p-2">
+						<button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 
+													dark:hover:text-white" data-modal-toggle="delete-popup-modal-{{ x.name }}">
+							<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+								<path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 
+															01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>  
+						</button>
+					</div>
+					<form method="POST" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 text-center">
+						<div class="mb-4" style="margin-top: -2rem;">
+							<label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+								Are you sure you want to remove {{ x.name }}?
+							</label>
+						</div>
+						<div class="flex items-center justify-between">
+							<button class="mb-6 text-white mx-auto bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 
+										text-center" type="submit", name="username" value="{{ x.name }}">
+							Yes, remove {{ x.name }}
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+	{% for x in teams %}
+		<div class="hidden overflow-y-auto overflow-x-hidden fixed right-0 left-0 top-4 z-50 justify-center items-center md:inset-0 h-modal sm:h-full" id="edit-popup-modal-{{ x.name }}">
+			<div class="relative px-4 w-full max-w-md h-full md:h-auto">
+				<div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+					<div class="flex justify-end p-2">
+						<button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 
+													dark:hover:text-white" data-modal-toggle="edit-popup-modal-{{ x.name }}">
+							<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+								<path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 
+															01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>  
+						</button>
+					</div>
+					<div class="p-6 pt-0 text-center">
+						<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Add Event and Ranking for {{ x.name }}</h3>
 						<div class="flex ml-6">
 							<div style="width: 9rem;">
 								<p class="font-bold relative" style="margin-bottom: 3px;">Select an Event:</p>
-								<select class="rounded-lg mb-6" name="event">
+								<select name="" id="" class="rounded-lg mb-6">
 									{% for event in events %}
-										{% if event.type in ["individual-academic", "individual-sports"] %}
-											<option>{{ event.name }}</option>
-										{% endif %}
+									{% if event.type in ["team-academic", "team-sports"] %}
+										<option>{{ event.name }}</option>
+									{% endif %}
 									{% endfor %}
 								</select>
 							</div>
 							<div style="padding-left: 2rem;">
-								<p class="font-bold relative" style="margin-bottom: 3px;">Select Player Rank:</p>
-								<select class="rounded-lg mb-6 relative" name="points">
+								<p class="font-bold relative" style="margin-bottom: 3px;">Select Team Rank:</p>
+								<select name="" id="" class="rounded-lg mb-6 relative">
 									<option value="5">1</option>
-									<option value="4">2</option>
-									<option value="3">3</option>
-									<option value="2">4</option>
-									<option value="1">5</option>
-									<option value="0">6+</option>
+									<option value="3">2</option>
+									<option value="2">3</option>
+									<option value="1">4</option>
 								</select>
 							</div>
 						</div>
-						<button data-modal-toggle="edit-popup-modal-{{ x.name }}" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-gray-300 rounded-lg border border-gray-200 
-																						   text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 
-																						   dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600">Cancel</button>
-						<button data-modal-toggle="edit-popup-modal-{{ x.name }}" name="name" value="{{ x.name }}" type="submit" class="text-white bg-green-400 hover:bg-green-800 focus:ring-4 
-																																		focus:ring-green-300 font-medium rounded-lg text-sm inline-flex 
-																																		  items-center px-5 py-2.5 text-center mr-2">Add</button>
+						<button data-modal-toggle="edit-popup-modal-{{ x.name }}" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-gray-300 rounded-lg border 
+																									border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 
+																									dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600">Cancel</button>
+						<button data-modal-toggle="edit-popup-modal-{{ x.name }}" type="button" class="text-white bg-green-400 hover:bg-green-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg 
+																										text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">Add</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="hidden overflow-y-auto overflow-x-hidden fixed right-0 left-0 top-4 z-50 justify-center items-center md:inset-0 h-modal sm:h-full" id="delete-popup-modal-{{ x.name }}">
+			<div class="relative px-4 w-full max-w-md h-full md:h-auto">
+				<div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+					<div class="flex justify-end p-2">
+						<button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 
+													dark:hover:text-white" data-modal-toggle="delete-popup-modal-{{ x.name }}">
+							<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+								<path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 
+															01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>  
+						</button>
+					</div>
+					<form method="POST" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 text-center">
+						<div class="mb-4" style="margin-top: -2rem;">
+							<label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+								Are you sure you want to remove {{ x.name }}?
+							</label>
+						</div>
+						<div class="flex items-center justify-between">
+							<button class="mb-6 text-white mx-auto bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 
+										text-center" type="submit", name="username" value="{{ x.name }}">
+							Yes, remove {{ x.name }}
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+	<div class="hidden overflow-y-auto overflow-x-hidden fixed right-0 left-0 top-4 z-50 justify-center items-center md:inset-0 h-modal sm:h-full" id="create-individual-event-popup-modal">
+		<div class="relative px-4 w-full max-w-md h-full md:h-auto">
+			<div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+
+				<div class="flex justify-end p-2">
+					<button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800
+												 dark:hover:text-white" data-modal-toggle="create-individual-event-popup-modal">
+						<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+							<path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 
+							4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>  
+					</button>
+				</div>
+				<div class="p-6 pt-0 text-center">
+					<h3 class="text-lg font-normal text-gray-500 dark:text-gray-400" style="margin-bottom: 2rem;">Create Event</h3>
+					<form method="POST" class="mb-8">
+						<p class="mt-3 font-bold">Event Name:</p>
+						<input name="new_event_name" type="text" placeholder="Example Event" class="rounded-lg relative mt-3" style="width: 18rem;" required>
+						<p class="mt-3 font-bold">Date of Event:</p>
+						<input name="new_event_date" type="text" placeholder="18/03/2022" class="rounded-lg relative mt-3" style="width: 18rem; ">
+						<p class="mt-3 font-bold">Time of Event:</p>
+						<input name="new_event_time" type="text" placeholder="13:00" class="rounded-lg relative mt-3" style="width: 18rem; ">
+						<p class="mt-3 font-bold">Location of Event:</p>
+						<input name="new_event_place" type="text" placeholder="Classroom 1" class="rounded-lg relative mt-3" style="width: 18rem; ">
+						<div class="mt-3">
+							<p class="font-bold relative" style="margin-bottom: 3px;">Select Event Type:</p>
+							<select class="rounded-lg mb-6 relative" name="new_event_type">
+								<option value="academic">Academic</option>
+								<option value="sports">Sports</option>
+							</select>
+						</div>
+					<button data-modal-toggle="create-individual-event-popup-modal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-gray-300 rounded-lg border
+																									     border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 
+																										 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600">Cancel</button>
+					<button data-modal-toggle="create-individual-event-popup-modal" type="submit" class="text-white bg-green-400 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium 
+																										   rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">Create</button>
 					</form>
 				</div>
 			</div>
 		</div>
 	</div>
-{% endfor %}
+	<div class="hidden overflow-y-auto overflow-x-hidden fixed right-0 left-0 top-4 z-50 justify-center items-center md:inset-0 h-modal sm:h-full" id="create-team-event-popup-modal">
+		<div class="relative px-4 w-full max-w-md h-full md:h-auto">
+			<div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+
+				<div class="flex justify-end p-2">
+					<button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800
+												 dark:hover:text-white" data-modal-toggle="create-team-event-popup-modal">
+						<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+							<path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 
+							4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>  
+					</button>
+				</div>
+				<div class="p-6 pt-0 text-center">
+					<h3 class="text-lg font-normal text-gray-500 dark:text-gray-400" style="margin-bottom: 2rem;">Create Event</h3>
+					<form method="POST" class="mb-8">
+						<p class="mt-3 font-bold">Event Name:</p>
+						<input name="new_event_name" type="text" placeholder="Example Event" class="rounded-lg relative mt-3" style="width: 18rem;" required>
+						<p class="mt-3 font-bold">Date of Event:</p>
+						<input name="new_event_date" type="date" placeholder="18/03/2022" class="rounded-lg relative mt-3" style="width: 18rem; ">
+						<p class="mt-3 font-bold">Time of Event:</p>
+						<input name="new_event_time" type="text" placeholder="13:00" class="rounded-lg relative mt-3" style="width: 18rem; ">
+						<p class="mt-3 font-bold">Location of Event:</p>
+						<input name="new_event_place" type="text" placeholder="Classroom 1" class="rounded-lg relative mt-3" style="width: 18rem; ">
+						<div class="mt-3">
+							<p class="font-bold relative" style="margin-bottom: 3px;">Select Event Type:</p>
+							<select class="rounded-lg mb-6 relative" name="new_event_type">
+								<option value="academic">Academic</option>
+								<option value="sports">Sports</option>
+							</select>
+						</div>
+					<button data-modal-toggle="create-team-event-popup-modal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-gray-300 rounded-lg border
+																									     border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 
+																										 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600">Cancel</button>
+					<button data-modal-toggle="create-team-event-popup-modal" type="submit" class="text-white bg-green-400 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium 
+																										   rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">Create</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% for event in events %}
+		<div class="hidden overflow-y-auto overflow-x-hidden fixed right-0 left-0 top-4 z-50 justify-center items-center md:inset-0 h-modal sm:h-full" id="edit-{{event.name}}-popup-modal">
+			<div class="relative px-4 w-full max-w-md h-full md:h-auto">
+				<div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+
+					<div class="flex justify-end p-2">
+						<button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 
+													 dark:hover:text-white" data-modal-toggle="edit-{{event.name}}-popup-modal">
+							<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+								<path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 
+															 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>  
+						</button>
+					</div>
+
+					<div class="p-6 pt-0 text-center">
+						<h3 class="text-lg font-normal text-gray-500 dark:text-gray-400" style="margin-bottom: 2rem;">Edit Event: {{ event.name }}</h3>
+						<form method="POST" class="mb-8">
+							<p class="mt-3 font-bold">Event Name:</p>
+							<input name="edit_event_name" type="text" value="{{event.name}}" placeholder="Enter Event Name" class="rounded-lg relative mt-3" style="width: 18rem;" required>
+							<p class="mt-3 font-bold">Event Details</p>
+							<input name="edit_event_date" type="date" value="{{event.date}}" placeholder="Date of Event (19/03/2022)" class="rounded-lg relative mt-3" style="width: 18rem; ">
+							<input name="edit_event_time" type="time" value="{{event.time}}" placeholder="Time of Event (11:00 - 13:00)" class="rounded-lg relative mt-3" style="width: 18rem; ">
+							<input name="edit_event_place" type="text" value="{{event.place}}" placeholder="Location of Event (Classroom 1)" class="rounded-lg relative mt-3" style="width: 18rem; ">
+							<div class="mt-3">
+								<p class="font-bold relative" style="margin-bottom: 3px;">Select Event Type:</p>
+								<select class="rounded-lg mb-6 relative" name="edit_event_type">
+									{% if "academic" in event.type %}
+									<option selected value="academic">Academic</option>
+									<option value="sports">Sports</option>
+									{% elif "sports" in event.type %}
+									<option value="academic">Academic</option>
+									<option selected value="sports">Sports</option>
+									{% endif %}
+								</select>
+							</div>
+						<button class="mb-6 text-white mx-auto bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center" 
+								type="submit", name="delete_event" value="{{ event.name }}">Delete {{ event.name }}</button>
+						<button data-modal-toggle="edit-{{event.name}}-popup-modal" type="submit" class="text-white bg-green-400 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg 
+																										   text-sm inline-flex items-center px-5 py-2.5 text-center mr-2" name="edit_event" 
+																										   value="{{ event.name }}">Save Changes</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
 	<script src="https://unpkg.com/flowbite@1.3.4/dist/flowbite.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="{{url_for('static', filename='js/main.js')}}"></script>

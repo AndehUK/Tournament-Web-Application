@@ -3,6 +3,7 @@ from .views import views #Imports the "views" blueprint class we initialised in 
 from flask_sqlalchemy import SQLAlchemy #Imports the SQLAlchemy class from the flask_sqlalchemy package
 from os import path #Allows me to conduct checks on a local file path from the core python package "os"
 from .models import db
+from datetime import datetime
 
 class App:
     def __init__(self):
@@ -10,6 +11,11 @@ class App:
         self.app.config["SECRET_KEY"] = "youshallnotpass" # Temporary password, this will be changed when the app is ready for production
         self.app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///database.db'
         self.app.register_blueprint(views, url_prefix="/") #Registers the "views" blueprint to the application
+        
+        @self.app.template_filter()
+        def format_string_date(value):
+            date = datetime.fromisoformat(value)
+            return str(datetime.strftime(date, "%d-%m-%Y")).replace("-", "/")
         
     def run(self, debug: bool=False):
         db.init_app(self.app) #Creates a database connection to allow us to interact with the database
@@ -20,4 +26,3 @@ class App:
         if not path.exists("website/database.db"):
             db.create_all(app=self.app)
             print("Created Database.")
-
