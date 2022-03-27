@@ -19,5 +19,5 @@ def home():
     teams = sorted(teams, key=lambda x: x.name) #Organises the teams alphabetically
     le_individuals = sorted(individuals, key=lambda x: x.points, reverse=True) #Organises the individuals in point order
     le_teams = sorted(teams, key=lambda x: x.points, reverse=True) #Organises the teams in point order
-    return render_template("home.html", individuals=individuals, teams=teams, li=le_individuals, lt=le_teams) #Will render the "home.html" file in the templates directory
+    return render_template("home.html", individuals=individuals, teams=teams, li=le_individuals, lt=le_teams, events=events) #Will render the "home.html" file in the templates directory
     

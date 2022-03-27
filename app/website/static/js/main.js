@@ -3,6 +3,8 @@ $(document).ready(function(){
     $(".pa_individuals").hide(); //Hides anything with the "pa_individuals" CSS class
     $(".le_teams").hide(); //Hides anything with the "le_teams" CSS class
     $(".le_individuals").hide(); //Hides anything with the "le_individuals" CSS class
+    $(".ev_individuals").hide(); //Hides anything with the "ev_individuals" CSS class
+    $(".ev_teams").hide(); //Hides anything with the "ev_teams" CSS class
     $("#select_participants").change(function(){ //If the value of the select menu with ID select_participants changes
         var value = $(this).find("option:selected").val() //assign the new value to the variable "value"
         if(value == "pa_individuals"){ //if the selected value is "pa_individuals"
@@ -46,6 +48,22 @@ $(document).ready(function(){
             $(".le_individuals").hide(); //Hide anything with the "le_individuals" CSS class
             $("#leaderboard-initial").hide(); //Hide anything with the "leaderboard-initial" CSS class
             $(".le_teams").show() //Show anything with the "le_teams" CSS class
+        }
+    })
+    $("#select_event").change(function(){ //If the value of the select menu with ID select_leaderboard changes
+        var value = $(this).find("option:selected").val() //assign the new value to the variable "value"
+        console.log(value)
+        if(value == "ev_individuals"){ //if the selected value is "ev_individuals"
+            $("#events-initial").hide();
+            $(".ev_teams").hide(); //Hide anything with the "ev_teams" CSS class
+            $("#events-initial").hide(); //Hide anything with the "events-initial" CSS class
+            $(".ev_individuals").show() //Show anything with the "ev_individuals" CSS class
+        }
+        else if(value == "ev_teams"){ //if the selected value is "ev_individuals"
+            $("#events-initial").hide();
+            $(".ev_individuals").hide(); //Hide anything with the "ev_individuals" CSS class
+            $("#events-initial").hide(); //Hide anything with the "events-initial" CSS class
+            $(".ev_teams").show() //Show anything with the "ev_teams" CSS class
         }
     })
 })

@@ -28,6 +28,10 @@
   align-items: center;
 }
 
+.event-button {
+  width: 25px !important;
+}
+
 *,
 ::before,
 ::after {
