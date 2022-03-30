@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin
 
 db = SQLAlchemy()
 
@@ -23,7 +24,7 @@ class Events(db.Model):
     place = db.Column(db.String(50)) #The location of the event
     type = db.Column(db.String(30)) # The type of event (Academic/Sports)
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True) # ID acting as a primary key
     email = db.Column(db.String(150), unique=True) # Unique so 1 email cant be used for multiple logins
     password = db.Column(db.String(150)) # Password for the user, no requirements set other than character limit.

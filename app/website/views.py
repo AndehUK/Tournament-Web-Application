@@ -1,5 +1,3 @@
-from asyncio import events
-from discord import Team
 from flask import (Blueprint, #Import the Blueprint class from the flask package
                    redirect, 
                   render_template, #Import the render_template function that will display the HTML file
@@ -8,7 +6,7 @@ from flask import (Blueprint, #Import the Blueprint class from the flask package
 from flask_login import login_user, logout_user, login_required
 from .models import *
 from werkzeug.exceptions import BadRequestKeyError
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 from ast import literal_eval
 
 views = Blueprint("views", __name__) #Initialise our blueprint and name it "views"
@@ -100,7 +98,7 @@ def delete_event(data):
         pass
 
 @views.route("/", methods=["POST", "GET"]) #Nothing is specified after the url prefix, meaning only the main url needs to be entered to view this page
-@login_required()
+@login_required
 def home():
     if request.method == "POST":
         data = request.form.to_dict()
@@ -175,7 +173,7 @@ def login():
     return render_template("login.html")
     
 @views.route("/logout")
-@login_required()
+@login_required
 def logout():
     logout_user()
     return redirect(url_for("views.login"))
